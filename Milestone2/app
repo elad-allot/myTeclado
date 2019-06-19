@@ -1,0 +1,69 @@
+import Milestone2.utils.database as DB
+
+
+def print_my_books(books):
+    if books is not None and len(books) > 0:
+        print("\tMy Books:")
+        for book in books:
+            print('\t\tTitle: %s, Author: %s have I read this book: %s' % (tuple(book.values())))
+    else:
+        print("No Books")
+
+
+def add_book():
+    book = [input("Book Name:"), input("Author Name:"), input("Have you read the book?(y/n)")]
+    DB.append(book)
+
+
+def delete_book():
+    att = 'name'
+    att_value = input("what book would you like to delete?")
+    try:
+        if DB.delete_book(att, att_value):
+            print("Book %s was deleted" % att_value)
+        else:
+            print("Book %s was not found" % att_value)
+    except TypeError as err:
+        print(err)
+    except FileExistsError:
+        print("No Books!")
+
+
+def mark_book_read():
+    att = 'name'
+    att_value = input("what book did you read?")
+    try:
+        if DB.mark_as_read(DB.find_book(att, att_value)):
+            print("Book %s was updated" % att_value)
+        else:
+            print("Book %s was not found" % att_value)
+    except TypeError as err:
+        print(err)
+    except FileExistsError:
+        print("No Books!")
+
+
+def main():
+    while True:
+        user_input = input(print_menu())
+        if user_input == '1':
+            add_book()
+        elif user_input == '2':
+            print_my_books(DB.get_all())
+        elif user_input == '3':
+            mark_book_read()
+        elif user_input == '4':
+            delete_book()
+        elif user_input == '5':
+            break
+        else:
+            print("Bad Input, try again")
+    print("Good Bye!")
+
+
+def print_menu():
+    return "1. Add New Book\n2. List All Books\n3. Mark Book as Read\n4. Delete Book\n5. Exit"
+
+
+if __name__ == '__main__':
+    main()
